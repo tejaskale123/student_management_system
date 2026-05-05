@@ -11,6 +11,14 @@ def mark_attendance(request):
         date = request.POST.get("date")
         status = request.POST.get("status")
 
+        print("student_id:", student_id)
+
+        if not student_id or student_id == "None":
+            return render(request, "attendance/add.html", {
+                "students": students,
+                "error": "Invalid student selected. Please create a new student record."
+            })
+
         Attendance.objects.create(
             student_id=student_id,
             date=date,
@@ -27,7 +35,7 @@ def list_attendance(request):
     attendance = Attendance.objects.all()
     return render(request, "attendance/list.html", {"attendance": attendance})
 
-def attendance_report(request, student_id):
+def report(request, student_id):
     total = Attendance.objects.filter(student_id=student_id).count()
     present = Attendance.objects.filter(
         student_id=student_id,

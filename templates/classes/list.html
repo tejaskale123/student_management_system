@@ -1,23 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Classes</h2>
+<div class="header-actions">
+    <h2>🏫 Manage Classes</h2>
+    <a href="/classes/add/" class="btn">➕ Add New Class</a>
+</div>
 
-<table border="1">
-<tr>
-<th>Name</th>
-<th>Year</th>
-<th>Section</th>
-</tr>
-
-{% for c in classes %}
-<tr>
-<td>{{ c.class_name }}</td>
-<td>{{ c.year }}</td>
-<td>{{ c.section }}</td>
-</tr>
-{% endfor %}
-
-</table>
-
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Class Name</th>
+                <th>Academic Year</th>
+                <th>Section</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in classes %}
+            <tr>
+                <td><strong>{{ c.class_name }}</strong></td>
+                <td>{{ c.year }}</td>
+                <td><span class="badge badge-section">{{ c.section }}</span></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-muted" style="padding: 2rem;">
+                    📭 No classes added yet. <a href="/classes/add/">Create your first class</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

@@ -1,36 +1,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Students</h2>
+<div class="header-actions">
+    <h2>👨‍🎓 Students Directory</h2>
+    <a href="/students/add/" class="btn">➕ Add New Student</a>
+</div>
 
-<form method="GET">
-<input type="text" name="q" placeholder="Search name">
-<button type="submit">Search</button>
+<!-- Search Bar -->
+<form method="GET" class="search-bar">
+    <input type="text" name="q" placeholder="🔍 Search by student name, email, or class..." value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+    {% if request.GET.q %}
+    <a href="/students/list/"
+        style="background: var(--gray-600); padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); color: white; text-decoration: none;">Clear</a>
+    {% endif %}
 </form>
 
-<table border="1">
-<tr>
-<th>Name</th>
-<th>Email</th>
-<th>Phone</th>
-<th>Class</th>
-<th>Action</th>
-</tr>
-
-{% for s in students %}
-<tr>
-<td>{{ s.name }}</td>
-<td>{{ s.email }}</td>
-<td>{{ s.phone }}</td>
-<td>{{ s.class_id }}</td>
-<td>
-    <a href="/students/edit/{{ s.id }}">Edit</a>
-    <a href="/students/delete/{{ s.id }}">Delete</a>
-    <a href="/attendance/report/{{ s.id }}">Report</a>
-</td>
-</tr>
-{% endfor %}
-
-</table>
-
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Class</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td><strong>{{ s.name }}</strong></td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.phone }}</td>
+                <td><span class="badge badge-class">Class {{ s.class_id }}</span></td>
+                <td>
+                    <div class="action-links">
+                        <a href="/students/edit/{{ s.pk }}" class="btn btn-sm">✏️ Edit</a>
+                        <a href="/attendance/report/{{ s.pk }}" class="btn btn-sm btn-secondary">📊 Report</a>
+                        <a href="/students/delete/{{ s.pk }}" class="btn btn-sm btn-danger">🗑️ Delete</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted" style="padding: 2rem;">
+                    ❌ No students found. <a href="/students/add/">Add a new student</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

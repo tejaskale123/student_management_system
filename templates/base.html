@@ -1,28 +1,61 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Student Management</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack Pro - Student Management</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
 
-<h1>Student Management System</h1>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">🎓 EduTrack Pro</a>
 
-<nav>
-    <a href="/">Dashboard</a> |
-    <a href="/students/add/">Add Student</a>
-    <a href="/students/list/">Students</a>
+        <div class="nav-links">
 
-    <a href="/classes/add/">Add Class</a>
-    <a href="/classes/list/">Classes</a>
+            <!-- 🔐 LOGIN CHECK -->
+            {% if request.user.is_authenticated %}
 
-    <a href="/attendance/add/">Mark Attendance</a>
-    <a href="/attendance/list/">Attendance</a>
-</nav>
+            <span>👋 Welcome, {{ request.user.username }}</span>
 
-<hr>
+            <a href="/">📊 Dashboard</a>
+            <a href="/students/list/">👨‍🎓 Students</a>
+            <a href="/classes/list/">🏫 Classes</a>
+            <a href="/attendance/list/">📅 Attendance</a>
 
-{% block content %}{% endblock %}
+            <!-- 🔥 ROLE BASED LINKS -->
+            {% for group in request.user.groups.all %}
+
+            {% if group.name == "Admin" %}
+            <a href="/students/add/">➕ Add Student</a>
+            <a href="/classes/add/">➕ Add Class</a>
+            {% endif %}
+
+            {% if group.name == "Teacher" %}
+            <a href="/attendance/add/">✔ Mark Attendance</a>
+            {% endif %}
+
+            {% endfor %}
+
+            <a href="/logout/">🚪 Logout</a>
+
+            {% else %}
+
+            <!-- 🔓 NOT LOGGED IN -->
+            <a href="/login/">🔐 Login</a>
+
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 
 </body>
+
 </html>

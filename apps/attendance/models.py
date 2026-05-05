@@ -1,7 +1,8 @@
-from django.db import models
+from djongo import models
 
 class Attendance(models.Model):
-    student_id = models.IntegerField()
+    _id = models.ObjectIdField()
+    student_id = models.CharField(max_length=50)
     date = models.DateField()
     status = models.CharField(max_length=10)
 

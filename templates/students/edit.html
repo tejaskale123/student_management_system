@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Edit Student</h2>
-<form method="POST">
-{% csrf_token %}
+<div class="form-container">
+    <h2 class="text-center mb-3">✏️ Edit Student Details</h2>
 
-<input type="text" name="name" value="{{ student.name }}"><br>
-<input type="email" name="email" value="{{ student.email }}"><br>
-<input type="text" name="phone" value="{{ student.phone }}"><br>
-<input type="number" name="class_id" value="{{ student.class_id }}"><br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>👤 Full Name</label>
+            <input type="text" name="name" value="{{ student.name }}" required>
+        </div>
+        <div class="form-group">
+            <label>📧 Email Address</label>
+            <input type="email" name="email" value="{{ student.email }}" required>
+        </div>
+        <div class="form-group">
+            <label>📞 Phone Number</label>
+            <input type="text" name="phone" value="{{ student.phone }}" required>
+        </div>
+        <div class="form-group">
+            <label>🏫 Class ID</label>
+            <input type="number" name="class_id" value="{{ student.class_id }}" required>
+        </div>
 
-<button type="submit">Update</button>
-</form>
+        <button type="submit">🔄 Update Details</button>
+    </form>
+</div>
 {% endblock %}

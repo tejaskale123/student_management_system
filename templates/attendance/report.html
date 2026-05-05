@@ -1,13 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Attendance Report</h2>
+<h2>📊 Attendance Report</h2>
 
-<div style="background:#f2f2f2; padding:20px; border-radius:10px; width:300px;">
+<div class="card" style="max-width: 400px; text-align: center; margin: 2rem auto;">
+    <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">📈 Overall Attendance</h3>
 
-<p>Total Classes: {{ total }}</p>
-<p>Present: {{ present }}</p>
-<p>Percentage: {{ percentage }}%</p>
+    <div style="display: flex; justify-content: space-around; margin-bottom: 1.5rem;">
+        <div>
+            <p class="text-muted" style="font-size: 0.875rem;">📚 Total Classes</p>
+            <p style="font-size: 1.5rem; font-weight: 600;">{{ total }}</p>
+        </div>
+        <div>
+            <p class="text-muted" style="font-size: 0.875rem;">✅ Classes Present</p>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #10b981;">{{ present }}</p>
+        </div>
+        <div>
+            <p class="text-muted" style="font-size: 0.875rem;">❌ Classes Absent</p>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #ef4444;">{{ absent|default:0 }}</p>
+        </div>
+    </div>
 
+    <div style="background: var(--gray-100); padding: 1.5rem; border-radius: var(--radius);">
+        <p class="text-muted" style="margin-bottom: 0.5rem;">📊 Attendance Percentage</p>
+        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">{{ percentage|floatformat:1 }}%</p>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="/attendance/list/" class="btn btn-sm">📋 View All Records</a>
+    <a href="/students/list/" class="btn btn-sm btn-secondary" style="margin-left: 0.5rem;">👨‍🎓 Back to Students</a>
 </div>
 {% endblock %}
