@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+<div style="display:flex; gap:20px;">
+
+<div style="padding:20px; background:#dff0d8;">
+<h3>Total Students</h3>
+<p>{{ total_students }}</p>
+</div>
+
+<div style="padding:20px; background:#d9edf7;">
+<h3>Total Classes</h3>
+<p>{{ total_classes }}</p>
+</div>
+
+<div style="padding:20px; background:#fcf8e3;">
+<h3>Total Attendance</h3>
+<p>{{ total_attendance }}</p>
+</div>
+
+</div>
+
+{% endblock %}

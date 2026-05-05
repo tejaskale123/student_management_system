@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Attendance Report</h2>
+
+<div style="background:#f2f2f2; padding:20px; border-radius:10px; width:300px;">
+
+<p>Total Classes: {{ total }}</p>
+<p>Present: {{ present }}</p>
+<p>Percentage: {{ percentage }}%</p>
+
+</div>
+{% endblock %}

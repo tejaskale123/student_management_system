@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<h1>Student Management System</h1>
+
+<nav>
+    <a href="/">Dashboard</a> |
+    <a href="/students/add/">Add Student</a>
+    <a href="/students/list/">Students</a>
+
+    <a href="/classes/add/">Add Class</a>
+    <a href="/classes/list/">Classes</a>
+
+    <a href="/attendance/add/">Mark Attendance</a>
+    <a href="/attendance/list/">Attendance</a>
+</nav>
+
+<hr>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

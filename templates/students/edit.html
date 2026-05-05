@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Edit Student</h2>
+<form method="POST">
+{% csrf_token %}
+
+<input type="text" name="name" value="{{ student.name }}"><br>
+<input type="email" name="email" value="{{ student.email }}"><br>
+<input type="text" name="phone" value="{{ student.phone }}"><br>
+<input type="number" name="class_id" value="{{ student.class_id }}"><br>
+
+<button type="submit">Update</button>
+</form>
+{% endblock %}
