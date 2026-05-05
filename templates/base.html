@@ -14,12 +14,216 @@
 
 <body>
     <div class="app-shell">
+<style>
+    /* SaaS Sidebar Styles */
+    .sidebar {
+        width: 260px;
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 24px 16px;
+        box-sizing: border-box;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        padding: 0 8px;
+    }
+
+    .brand-icon {
+        font-size: 24px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-brand h1 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+    }
+
+    .sidebar-brand p {
+        font-size: 12px;
+        color: #94a3b8;
+        margin: 2px 0 0 0;
+    }
+
+    .sidebar-search {
+        margin-bottom: 24px;
+    }
+
+    .sidebar-search input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #ffffff;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .sidebar-search input::placeholder {
+        color: #94a3b8;
+    }
+
+    .sidebar-search input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-nav a:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #ffffff;
+        transform: translateX(5px);
+    }
+
+    .sidebar-nav a.active {
+        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        transform: scale(1.02);
+    }
+
+    .sidebar-footer {
+        margin-top: auto;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-block {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding: 0 8px;
+    }
+
+    .profile-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .profile-role {
+        font-size: 12px;
+        color: #94a3b8;
+        margin: 2px 0 0 0;
+    }
+
+    .sidebar-logout, .sidebar-login {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-logout {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .sidebar-logout:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+    
+    .sidebar-login {
+        background: rgba(99, 102, 241, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    .sidebar-login:hover {
+        background: rgba(99, 102, 241, 0.2);
+        color: #a78bfa;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 220px;
+        }
+    }
+</style>
+
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <span class="brand-icon">🎓</span>
                 <div>
                     <h1>EduTrack Pro</h1>
-                    <p>Smart school dashboard</p>
+                    <p>Smart dashboard</p>
                 </div>
             </div>
 
@@ -29,7 +233,7 @@
 
             <nav class="sidebar-nav">
                 <a href="/" class="{% if request.path == '/' %}active{% endif %}">🏠 Dashboard</a>
-                <a href="/students/list/" class="{% if request.path == '/students/list/' %}active{% endif %}">👨‍🎓 Students</a>
+                <a href="/students/list/" class="{% if request.path == '/students/list/' %}active{% endif %}">🎓 Students</a>
                 <a href="/classes/list/" class="{% if request.path == '/classes/list/' %}active{% endif %}">🏫 Classes</a>
                 <a href="/attendance/list/" class="{% if request.path == '/attendance/list/' %}active{% endif %}">📅 Attendance</a>
                 <a href="/attendance/report/" class="{% if request.path == '/attendance/report/' %}active{% endif %}">📊 Reports</a>
@@ -42,7 +246,7 @@
                 {% if request.user.is_authenticated %}
                 <div class="profile-block">
                     <div class="profile-avatar">{{ request.user.username|slice:":1"|upper }}</div>
-                    <div>
+                    <div class="profile-info">
                         <p class="profile-name">{{ request.user.username }}</p>
                         <p class="profile-role">Welcome back</p>
                     </div>
