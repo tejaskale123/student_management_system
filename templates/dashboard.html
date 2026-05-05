@@ -3,24 +3,69 @@
 {% block content %}
 <div class="header-actions">
     <h2>📊 Dashboard Overview</h2>
-    <div style="display: flex; gap: 0.75rem;">
-        <a href="/students/add/" class="btn btn-sm">➕ Add Student</a>
-        <a href="/attendance/add/" class="btn btn-sm btn-secondary">📝 Mark Attendance</a>
-    </div>
+{% if request.path != '/' %}
+<div class="topbar-right">
+    <a href="{% url 'add_student' %}" class="btn btn-sm">➕ Add Student</a>
+    <a href="{% url 'mark_attendance' %}" class="btn btn-sm btn-secondary">📝 Mark Attendance</a>
+</div>
+{% endif %}
 </div>
 
 <div class="dashboard-grid">
     <div class="card">
         <h3>👨‍🎓 Total Students</h3>
         <div class="stat">{{ total_students }}</div>
+        <p class="subtext">All active student profiles in the system.</p>
     </div>
     <div class="card">
         <h3>🏫 Total Classes</h3>
         <div class="stat">{{ total_classes }}</div>
+        <p class="subtext">Number of classes currently available.</p>
     </div>
     <div class="card">
         <h3>📋 Total Attendance Records</h3>
         <div class="stat">{{ total_attendance }}</div>
+        <p class="subtext">Records saved from attendance sessions.</p>
+    </div>
+</div>
+
+<div class="analytics-grid">
+    <div class="chart-card">
+        <h3>Attendance Insights</h3>
+        <div class="report-graph">
+            <div>
+                <div class="text-muted">Expected attendance rate</div>
+                <div class="graph-bar"><span style="width: {{ attendance_rate|default:78 }}%;"></span></div>
+            </div>
+            <div>
+                <div class="text-muted">Attendance density</div>
+                <div class="graph-bar"><span style="width: {{ total_attendance|default:65 }}%; background: linear-gradient(90deg, #6366f1, #4ade80);"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overview-card">
+        <h3>Quick Actions</h3>
+        <div class="metrics-grid">
+            <div class="report-metric">
+                <div>
+                    <span>New Students</span>
+                    <strong>{{ recent_students|default:12 }}</strong>
+                </div>
+            </div>
+            <div class="report-metric">
+                <div>
+                    <span>New Classes</span>
+                    <strong>{{ recent_classes|default:4 }}</strong>
+                </div>
+            </div>
+            <div class="report-metric">
+                <div>
+                    <span>Pending Tasks</span>
+                    <strong>{{ pending_actions|default:3 }}</strong>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -58,6 +58,7 @@ student_management_system/
 └── templates/
     ├── base.html
     ├── dashboard.html
+    ├── error.html
     ├── login.html
     ├── attendance/
     │   ├── add.html
@@ -180,7 +181,9 @@ from . import views
 urlpatterns = [
     path('add/', views.mark_attendance),
     path('list/', views.list_attendance),
+    path('report/', views.report_summary),
     path('report/<str:student_id>/', views.report),
+  
 ]
 
 ================================================================================
@@ -188,14 +191,27 @@ FILE: apps\attendance\views.py
 ================================================================================
 
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Attendance
 from apps.students.models import Student
 
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+def is_teacher(user):
+    return user.groups.filter(name='Teacher').exists()
+
 # MARK ATTENDANCE
+@login_required
 def mark_attendance(request):
+    is_admin_or_teacher = request.user.is_superuser or is_admin(request.user) or is_teacher(request.user)
+    if not is_admin_or_teacher:
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can mark attendance'})
+    
     students = Student.objects.all()
 
     if request.method == "POST":
+
         student_id = request.POST.get("student_id")
         date = request.POST.get("date")
         status = request.POST.get("status")
@@ -220,15 +236,37 @@ def mark_attendance(request):
 
 
 # LIST ATTENDANCE
+@login_required
 def list_attendance(request):
     attendance = Attendance.objects.all()
     return render(request, "attendance/list.html", {"attendance": attendance})
 
+@login_required
+def report_summary(request):
+    total = Attendance.objects.count()
+    present = Attendance.objects.filter(status="Present").count()
+    absent = Attendance.objects.filter(status="Absent").count()
+    percentage = 0
+    if total > 0:
+        percentage = (present / total) * 100
+
+    return render(request, "attendance/report.html", {
+        "total": total,
+        "present": present,
+        "absent": absent,
+        "percentage": percentage
+    })
+
+@login_required
 def report(request, student_id):
     total = Attendance.objects.filter(student_id=student_id).count()
     present = Attendance.objects.filter(
         student_id=student_id,
         status="Present"
+    ).count()
+    absent = Attendance.objects.filter(
+        student_id=student_id,
+        status="Absent"
     ).count()
 
     percentage = 0
@@ -238,6 +276,7 @@ def report(request, student_id):
     return render(request, "attendance/report.html", {
         "total": total,
         "present": present,
+        "absent": absent,
         "percentage": percentage
     })
 
@@ -341,10 +380,22 @@ FILE: apps\classes\views.py
 ================================================================================
 
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Class
 
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+def is_teacher(user):
+    return user.groups.filter(name='Teacher').exists()
+
 # ADD CLASS
+@login_required
 def add_class(request):
+    is_admin_user = request.user.is_superuser or is_admin(request.user)
+    if not is_admin_user:
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin can add classes'})
+    
     if request.method == "POST":
         Class.objects.create(
             class_name=request.POST.get("class_name"),
@@ -357,9 +408,11 @@ def add_class(request):
 
 
 # LIST CLASSES
+@login_required
 def list_classes(request):
     classes = Class.objects.all()
     return render(request, "classes/list.html", {"classes": classes})
+
 
 ================================================================================
 FILE: apps\students\__init__.py
@@ -466,27 +519,31 @@ FILE: apps\students\views.py
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from .models import Student
-
+from django.contrib.auth.decorators import login_required
 
 # 🔐 ADD STUDENT
 @login_required
 def add_student(request):
+    if not request.user.is_authenticated:
+        return redirect('/login/')
+
+    # ✅ allow both admin + teacher
+    if not (request.user.is_superuser or request.user.groups.filter(name='Admin').exists() or request.user.groups.filter(name='Teacher').exists()):
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can add students'})
+
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
         class_id = request.POST.get("class_id")
 
-        # 🛑 basic validation
-        if not name or not email or not phone or not class_id:
-            return render(request, "students/add.html", {"error": "All fields required"})
-
         Student.objects.create(
             name=name,
             email=email,
             phone=phone,
-            class_id=int(class_id)
+            class_id=class_id
         )
 
         return redirect("/students/list/")
@@ -510,6 +567,9 @@ def list_students(request):
 # 🔐 DELETE STUDENT
 @login_required
 def delete_student(request, id):
+    if not (request.user.is_superuser or is_admin(request.user)):
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin can delete students'})
+        
     student = get_object_or_404(Student, pk=id)
     student.delete()
     return redirect("/students/list/")
@@ -518,6 +578,10 @@ def delete_student(request, id):
 # 🔐 EDIT STUDENT
 @login_required
 def edit_student(request, id):
+    is_admin_or_teacher = request.user.is_superuser or is_admin(request.user) or is_teacher(request.user)
+    if not is_admin_or_teacher:
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can edit students'})
+        
     student = get_object_or_404(Student, pk=id)
 
     if request.method == "POST":
@@ -530,6 +594,16 @@ def edit_student(request, id):
         return redirect("/students/list/")
 
     return render(request, "students/edit.html", {"student": student})
+
+
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+def is_teacher(user):
+    return user.groups.filter(name='Teacher').exists()
+
+def is_student(user):
+    return user.groups.filter(name='Student').exists()
 
 ================================================================================
 FILE: export_project.py

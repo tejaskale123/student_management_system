@@ -1,27 +1,28 @@
 # 🎓 EduTrack Pro - Student Management System
 
-EduTrack Pro is a modern, feature-rich **Student Management System** built using **Django** and **MongoDB**. It provides an intuitive and highly professional User Interface (UI) to efficiently manage students, classes, and daily attendance.
+EduTrack Pro is a modern, fully functional **Student Management System** built with **Django** and **MongoDB**. It offers a professional dashboard UI, role-based access control, and a complete workflow for managing students, classes, attendance, and reports.
 
 ---
 
 ## 🚀 Key Features
 
-* **📊 Interactive Dashboard:** Provides a quick overview of the total number of students, classes, and attendance records.
-* **👨‍🎓 Student Management (CRUD):** Add, View, Edit, and Delete student records with ease.
-* **🏫 Class Management:** Create and organize classes with academic years and sections.
-* **📅 Attendance Tracking:** Mark daily attendance (Present/Absent) with a smart student dropdown.
-* **📈 Attendance Reports:** Automatically calculates the total attendance percentage for individual students.
-* **🔍 Search Functionality:** Easily search for students by name.
-* **🎨 Professional UI/UX:** Clean, modern, responsive design using custom CSS with shadow effects, cards, and interactive hover states.
+* **📊 Dashboard Overview:** Shows totals for students, classes, and attendance records in a clean dashboard.
+* **👨‍🎓 Student Management:** Add, view, edit, and delete student records.
+* **🏫 Class Management:** Add academic classes with year and section.
+* **📅 Attendance Tracking:** Mark daily attendance using student dropdowns.
+* **📈 Attendance Reports:** View overall attendance summary and student-specific reports.
+* **🔐 Role-based Access:** Supports Admin and Teacher roles with proper authorization.
+* **🔍 Search Functionality:** Search students by name in the student list.
+* **🎨 Custom UI:** Responsive HTML/CSS design with cards, shadows, and modern spacing.
 
 ---
 
 ## 🛠️ Technology Stack
 
 * **Backend:** Python, Django 4.1
-* **Database:** MongoDB (via `djongo` engine)
-* **Frontend:** HTML5, CSS3 (Custom responsive design)
-* **Environment Management:** `python-dotenv`
+* **Database:** MongoDB via `djongo`
+* **Frontend:** HTML5, CSS3 (Custom responsive styles)
+* **Config:** `python-dotenv`
 
 ---
 
@@ -34,26 +35,27 @@ student_management_system/
 ├── .env
 ├── requirements.txt
 │
-├── student_project/        # Main Django Configuration
+├── student_project/        # Django project settings and URLs
 │   ├── settings.py
 │   ├── urls.py
-│   └── views.py            # Dashboard view
+│   └── views.py            # Dashboard, login, logout
 │
-├── apps/                   # App Modules
-│   ├── students/           # Student CRUD & Search
-│   ├── classes/            # Class CRUD
-│   └── attendance/         # Attendance tracking & Reports
+├── apps/                   # Django apps
+│   ├── students/           # Student CRUD, search, authorization
+│   ├── classes/            # Class creation and listing
+│   └── attendance/         # Attendance marking and reporting
 │
-├── templates/              # HTML Templates
-│   ├── base.html           # Main UI Layout & Navbar
-│   ├── dashboard.html      # Overview Cards
+├── templates/              # HTML templates
+│   ├── base.html           # Layout, sidebar, dashboard shell
+│   ├── dashboard.html      # Dashboard overview page
+│   ├── error.html          # Styled access denied page
 │   ├── students/
 │   ├── classes/
 │   └── attendance/
 │
 └── static/
     └── css/
-        └── style.css       # Custom Professional Styling
+        └── style.css       # Project-wide styling
 ```
 
 ---
@@ -68,40 +70,58 @@ git clone <repository-url>
 cd student_management_system
 ```
 
-### 2. Create a Virtual Environment (Optional but recommended)
+### 2. Create a virtual environment (recommended)
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
-Make sure you have all required packages (Django, djongo, pymongo, python-dotenv, pytz).
+### 3. Install dependencies
 ```bash
 pip install django djongo pymongo python-dotenv pytz
 ```
 
-### 4. Setup Environment Variables
-Create a `.env` file in the root directory and add your MongoDB connection details:
+### 4. Configure environment variables
+Create a `.env` file in the project root with your MongoDB settings:
 ```env
 MONGO_URL=mongodb://127.0.0.1:27017
 MONGO_DB_NAME=student_db
 ```
 
-### 5. Run Migrations
+### 5. Run database migrations
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 6. Start the Server
+### 6. Start the development server
 ```bash
 python manage.py runserver
 ```
 
-Open your browser and navigate to: `http://127.0.0.1:8000/`
+Open: `http://127.0.0.1:8000/`
+
+---
+
+## 🧑‍🏫 Role Setup
+
+Use Django Admin to create roles and assign users:
+
+1. Go to `http://127.0.0.1:8000/admin/`
+2. Create a `Teacher` group
+3. Assign the teacher user to the `Teacher` group
+4. Use admin users for full access
+
+---
+
+## 👨‍💻 Notes
+
+* The app supports role-based access for Admin and Teacher users.
+* Reports are available from the attendance section.
+* The UI uses custom CSS only—no Bootstrap.
 
 ---
 
 ## 👨‍💻 Author
 
-Developed as a modern full-stack web application for efficient school administration.
+Developed as a modern full-stack school administration application.

@@ -6,56 +6,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduTrack Pro - Student Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">🎓</span>
+                <div>
+                    <h1>EduTrack Pro</h1>
+                    <p>Smart school dashboard</p>
+                </div>
+            </div>
 
-    <nav class="navbar">
-        <a href="/" class="navbar-brand">🎓 EduTrack Pro</a>
+            <div class="sidebar-search">
+                <input type="search" placeholder="Search dashboard..." aria-label="Search dashboard">
+            </div>
 
-        <div class="nav-links">
+            <nav class="sidebar-nav">
+                <a href="/" class="{% if request.path == '/' %}active{% endif %}">🏠 Dashboard</a>
+                <a href="/students/list/" class="{% if request.path == '/students/list/' %}active{% endif %}">👨‍🎓 Students</a>
+                <a href="/classes/list/" class="{% if request.path == '/classes/list/' %}active{% endif %}">🏫 Classes</a>
+                <a href="/attendance/list/" class="{% if request.path == '/attendance/list/' %}active{% endif %}">📅 Attendance</a>
+                <a href="/attendance/report/" class="{% if request.path == '/attendance/report/' %}active{% endif %}">📊 Reports</a>
+                {% if request.user.is_authenticated %}
+                <a href="/logout/">🚪 Logout</a>
+                {% endif %}
+            </nav>
 
-            <!-- 🔐 LOGIN CHECK -->
-            {% if request.user.is_authenticated %}
+            <div class="sidebar-footer">
+                {% if request.user.is_authenticated %}
+                <div class="profile-block">
+                    <div class="profile-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+                    <div>
+                        <p class="profile-name">{{ request.user.username }}</p>
+                        <p class="profile-role">Welcome back</p>
+                    </div>
+                </div>
+                <a href="/logout/" class="sidebar-logout">Logout</a>
+                {% else %}
+                <a href="/login/" class="sidebar-login">Login</a>
+                {% endif %}
+            </div>
+        </aside>
 
-            <span>👋 Welcome, {{ request.user.username }}</span>
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    {% if request.user.is_authenticated %}
+                    <p class="topbar-label">👋 Hello, <strong>{{ request.user.username }}</strong></p>
+                    <p class="topbar-meta">Quick access to students, classes, and attendance</p>
+                    {% else %}
+                    <p class="topbar-label">Welcome to EduTrack Pro</p>
+                    <p class="topbar-meta">Please sign in to continue managing your school</p>
+                    {% endif %}
+                </div>
 
-            <a href="/">📊 Dashboard</a>
-            <a href="/students/list/">👨‍🎓 Students</a>
-            <a href="/classes/list/">🏫 Classes</a>
-            <a href="/attendance/list/">📅 Attendance</a>
+                <div class="topbar-right">
+                    <a href="/students/add/" class="btn btn-sm">➕ Add Student</a>
+                    <a href="/attendance/add/" class="btn btn-sm btn-secondary">📝 Mark Attendance</a>
+                </div>
+            </header>
 
-            <!-- 🔥 ROLE BASED LINKS -->
-            {% for group in request.user.groups.all %}
-
-            {% if group.name == "Admin" %}
-            <a href="/students/add/">➕ Add Student</a>
-            <a href="/classes/add/">➕ Add Class</a>
-            {% endif %}
-
-            {% if group.name == "Teacher" %}
-            <a href="/attendance/add/">✔ Mark Attendance</a>
-            {% endif %}
-
-            {% endfor %}
-
-            <a href="/logout/">🚪 Logout</a>
-
-            {% else %}
-
-            <!-- 🔓 NOT LOGGED IN -->
-            <a href="/login/">🔐 Login</a>
-
-            {% endif %}
-
+            <main class="page-body">
+                {% block content %}{% endblock %}
+            </main>
         </div>
-    </nav>
-
-    <div class="container">
-        {% block content %}{% endblock %}
     </div>
-
 </body>
 
 </html>
