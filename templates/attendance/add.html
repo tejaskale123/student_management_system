@@ -14,10 +14,17 @@
         <div class="form-group">
             <label>👨‍🎓 Select Student</label>
             <select name="student_id" required>
-                <option value="" disabled selected>-- Choose Student --</option>
-                {% for s in students %}
-                <option value="{{ s.pk }}">{{ s.name }} (Class {{ s.class_id }})</option>
+
+                <option value="">Select Student</option>
+
+                {% for student in students %}
+
+                    <option value="{{ student.pk }}">
+                        {{ student.name }} ({{ student.student_class.class_name }})
+                    </option>
+
                 {% endfor %}
+
             </select>
         </div>
         <div class="form-group">

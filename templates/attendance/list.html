@@ -19,7 +19,7 @@
         <tbody>
             {% for a in attendance %}
             <tr>
-                <td><strong>#{{ a.student_id }}</strong></td>
+                <td><strong>#{{ a.student.name }}</strong></td>
                 <td>{{ a.student_name|default:"-" }}</td>
                 <td>{{ a.date }}</td>
                 <td>

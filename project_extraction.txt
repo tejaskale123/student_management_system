@@ -46,8 +46,10 @@ student_management_system/
 │           ├── 0001_initial.py
 │           └── __init__.py
 ├── static/
-│   └── css/
-│       └── style.css
+│   ├── css/
+│   │   └── style.css
+│   └── images/
+│       └── bg.png
 ├── student_project/
 │   ├── __init__.py
 │   ├── asgi.py
@@ -196,16 +198,15 @@ from .models import Attendance
 from apps.students.models import Student
 
 def is_admin(user):
-    return user.groups.filter(name='Admin').exists()
+    return user.is_superuser or user.is_staff or user.groups.filter(name__iexact='Admin').exists()
 
 def is_teacher(user):
-    return user.groups.filter(name='Teacher').exists()
+    return user.groups.filter(name__iexact='Teacher').exists()
 
 # MARK ATTENDANCE
 @login_required
 def mark_attendance(request):
-    is_admin_or_teacher = request.user.is_superuser or is_admin(request.user) or is_teacher(request.user)
-    if not is_admin_or_teacher:
+    if not (is_admin(request.user) or is_teacher(request.user)):
         return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can mark attendance'})
     
     students = Student.objects.all()
@@ -384,17 +385,16 @@ from django.contrib.auth.decorators import login_required
 from .models import Class
 
 def is_admin(user):
-    return user.groups.filter(name='Admin').exists()
+    return user.is_superuser or user.is_staff or user.groups.filter(name__iexact='Admin').exists()
 
 def is_teacher(user):
-    return user.groups.filter(name='Teacher').exists()
+    return user.groups.filter(name__iexact='Teacher').exists()
 
 # ADD CLASS
 @login_required
 def add_class(request):
-    is_admin_user = request.user.is_superuser or is_admin(request.user)
-    if not is_admin_user:
-        return render(request, 'error.html', {'message': 'Access Denied - Only Admin can add classes'})
+    if not (is_admin(request.user) or is_teacher(request.user)):
+        return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can add classes'})
     
     if request.method == "POST":
         Class.objects.create(
@@ -530,7 +530,7 @@ def add_student(request):
         return redirect('/login/')
 
     # ✅ allow both admin + teacher
-    if not (request.user.is_superuser or request.user.groups.filter(name='Admin').exists() or request.user.groups.filter(name='Teacher').exists()):
+    if not (is_admin(request.user) or is_teacher(request.user)):
         return render(request, 'error.html', {'message': 'Access Denied - Only Admin or Teacher can add students'})
 
     if request.method == "POST":
@@ -597,13 +597,13 @@ def edit_student(request, id):
 
 
 def is_admin(user):
-    return user.groups.filter(name='Admin').exists()
+    return user.is_superuser or user.is_staff or user.groups.filter(name__iexact='Admin').exists()
 
 def is_teacher(user):
-    return user.groups.filter(name='Teacher').exists()
+    return user.groups.filter(name__iexact='Teacher').exists()
 
 def is_student(user):
-    return user.groups.filter(name='Student').exists()
+    return user.groups.filter(name__iexact='Student').exists()
 
 ================================================================================
 FILE: export_project.py
